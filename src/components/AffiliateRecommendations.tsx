@@ -3,7 +3,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ExternalLink, Sparkles, ShoppingBag, Crown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { CommerceAdvisor } from '@/components/CommerceAdvisor';
 
 interface AffiliateProduct {
   id: string;
@@ -269,8 +268,6 @@ export default function AffiliateRecommendations() {
       <p className="text-xs text-muted-foreground -mt-2">
         Produkter baserade på din gårds behov och årstid. Vi kan få ersättning vid köp.
       </p>
-
-      <CommerceAdvisor />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {picks.map((product) => (
