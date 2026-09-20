@@ -1,5 +1,4 @@
 import { createClient } from "npm:@supabase/supabase-js@2.57.2";
-import { dispatchAuroraNotification } from "../_shared/aurora-notify.ts";
 
 const LOGO_URL = "https://sikbymtrbhrofysgkqsj.supabase.co/storage/v1/object/public/email-assets/logo-honsgarden.png";
 const APP_URL = "https://honsgarden.lovable.app";
@@ -82,24 +81,19 @@ Deno.serve(async (_req) => {
   </p>
 </div>`;
 
-      await dispatchAuroraNotification(supabase, {
-        event: "subscription.expired",
-        subscriberId: user.user_id,
+      await supabase.rpc("enqueue_email", {
+        queue_name: "transactional_emails",
         payload: {
-          displayName,
-          premiumExpiresAt: user.premium_expires_at,
-          upgradeUrl: `${APP_URL}/app/premium`,
-        },
-        email: {
           to: user.email,
           from: "Hönsgården <noreply@notify.honsgarden.se>",
-          senderDomain: "notify.honsgarden.se",
+          sender_domain: "notify.honsgarden.se",
           subject: "Din Premium har löpt ut – vi saknar dig! 🌻",
           html,
           text: `Hej ${displayName}! Din Premium-period på Hönsgården har avslutats. Uppgradera igen: ${APP_URL}/app/premium`,
           purpose: "transactional",
           label: "premium-expired",
-          messageId,
+          message_id: messageId,
+          queued_at: new Date().toISOString(),
         },
       });
 
